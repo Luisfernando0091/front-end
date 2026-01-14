@@ -2,20 +2,21 @@
   <div class="page">
 
     <!-- ===================== HEADER ===================== -->
-    <div class="header">
+      <div class="header">
       <div class="header-content">
-        <div class="header-icon">📋</div>
+        <div class="header-icon">
+          <i class="ti ti-clipboard-text"></i>
+        </div>
         <div>
           <h1>Gestión de Prospectos</h1>
           <p class="header-subtitle">Administra y organiza tus prospectos de forma eficiente</p>
         </div>
       </div>
       <button class="btn primary btn-icon" @click="openCreate">
-        <span class="icon">➕</span>
+        <i class="ti ti-plus"></i>
         <span>Nuevo Prospecto</span>
       </button>
     </div>
-
     <!-- ===================== STATS ===================== -->
     <div class="stats-grid">
       <div class="stat-card">
@@ -488,82 +489,191 @@
 
 
 <transition name="modal">
-  <div v-if="showSeguimientoModal" class="modal-backdrop">
+  <div v-if="showSeguimientoModal" class="modal-backdrop" @click.self="showSeguimientoModal = false">
     <div class="modal modal-large">
 
       <div class="modal-header warning">
         <h2>📊 Seguimiento del Prospecto</h2>
-        <button class="btn-close" @click="showSeguimientoModal = false">✕</button>
+        <button class="btn-close" @click="showSeguimientoModal = false" aria-label="Cerrar">✕</button>
       </div>
 
-      <div class="modal-body modal-grid">
+      <div class="modal-body">
+        
+<div class="section-card">
+          <h3 class="section-title">🔵Prospecto Nuevo </h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha próxima cita <span class="required">*</span></label>
+              <input 
+                type="date" 
+                v-model="seguimientoForm.fecha_proxima_cita"
+                class="form-control"
+              />
+            </div>
 
-        <div class="form-group">
-          <label>Certificado</label>
-          <input v-model="seguimientoForm.id_certificado" type="text" />
+            <div class="form-group">
+              <!-- <label>Atención 1 visita</label> -->
+              <textarea 
+                v-model="seguimientoForm.visita1" 
+                class="form-control"
+                placeholder="Escribe las notas de la primera visita..."
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
         </div>
 
-        <div class="form-group">
-          <label>Fecha próxima cita</label>
-          <input type="date" v-model="seguimientoForm.fecha_proxima_cita" />
+        <!-- Sección: Primera Visita -->
+        <div class="section-card">
+          <h3 class="section-title">🔵 Atencion 1 </h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha próxima cita <span class="required">*</span></label>
+              <input 
+                type="date" 
+                v-model="seguimientoForm.fecha_proxima_cita"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Atención 1 visita</label>
+              <textarea 
+                v-model="seguimientoForm.visita2" 
+                class="form-control"
+                placeholder="Escribe las notas de la primera visita..."
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Correo electrónico <span class="required">*</span></label>
+            <input
+              type="email"
+              class="form-control"
+              v-model="seguimientoForm.email"
+              placeholder="ejemplo@correo.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Adjuntar imagen de envío de la proforma virtual (*)</label>
+            
+            <div v-if="seguimientoForm.nombre_archivo1" class="file-preview">
+              <span class="file-icon">📎</span>
+              <a :href="seguimientoForm.nombre_archivo1" target="_blank" class="file-link">
+                Ver imagen actual
+              </a>
+            </div>
+
+            <div class="file-upload-wrapper">
+              <input
+            ref="inputAceptacion"
+            type="file"
+            accept="image/*"
+            @change="onFileChangeAceptacion"
+            class="file-input"
+            id="file-upload-aceptacion"
+          />
+
+              <label for="file-upload" class="file-label">
+                <span class="file-icon">📁</span>
+                Seleccionar imagen
+              </label>
+              <small class="help-text">Formatos: JPG, PNG, GIF (Max. 5MB)</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Adjuntar imagen de aceptación de la proforma virtual (*)</label>
+            
+            <div v-if="seguimientoForm.nombre_archivo2" class="file-preview">
+              <span class="file-icon">📎</span>
+              <a :href="seguimientoForm.nombre_archivo2" target="_blank" class="file-link">
+                Ver imagen de aceptación actual
+              </a>
+            </div>
+
+            <div class="file-upload-wrapper">
+             <input
+              ref="inputProforma"
+              type="file"
+              accept="image/*"
+              @change="onFileChange"
+              class="file-input"
+              id="file-upload"
+            />
+
+              <label for="file-upload-aceptacion" class="file-label">
+                <span class="file-icon">📁</span>
+                Seleccionar imagen de aceptación
+              </label>
+              <small class="help-text">Formatos: JPG, PNG, GIF (Max. 5MB)</small>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group checkbox">
-          <label>
-            <input type="text" v-model="seguimientoForm.visita1" />
-            Primera visita
-          </label>
+        <!-- Sección: Segunda Visita -->
+        <div class="section-card">
+          <h3 class="section-title">🟢 Atención 2</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha próxima cita (Visita 2)</label>
+              <input
+                type="date"
+                class="form-control"
+                v-model="seguimientoForm.fechaproximacita_visita2"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Atención 2 </label>
+              <textarea 
+                v-model="seguimientoForm.visita3" 
+                class="form-control"
+                placeholder="Escribe las notas de la segunda visita..."
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Cantidad de visitas</label>
-          <input type="number" v-model="seguimientoForm.cantidadvisitas" />
+        <!-- Sección: Tercera Visita -->
+        <div class="section-card">
+          <h3 class="section-title">🟡 Atenacion 3</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha próxima cita (Visita 3)</label>
+              <input
+                type="date"
+                class="form-control"
+                v-model="seguimientoForm.fechaproximacita_visita3"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Atención 3 visita</label>
+              <textarea 
+                v-model="seguimientoForm.visita4" 
+                class="form-control"
+                placeholder="Escribe las notas de la tercera visita..."
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
         </div>
-
-         <div class="form-group">
-  <label>Adjuntar imagen de envío de la proforma virtual (*)</label>
-  <input
-    type="file"
-    accept="image/*"
-    @change="onFileChange"
-    class="form-control"
-  />
-</div>
-         <div class="form-group">
-  <label>Adjuntar imagen de envío de la proforma virtual (*)</label>
-  <input
-    type="file"
-    accept="image/*"
-    @change="onFileChange"
-    class="form-control"
-  />
-</div>
-
-
- <div class="form-group">
-          <label>Correoxd</label>
-<input
-  type="email"
-  class="form-control"
-  v-model="seguimientoForm.email"
-/>
-        </div>
-
-
-<div class="form-group">
-  <label>Fecha próxima cita (Visita 2)</label>
-  <input
-    type="date"
-    class="form-control"
-    v-model="seguimientoForm.fechaproximacita_visita2"
-  />
-</div>
 
       </div>
 
       <div class="modal-footer">
         <button class="btn secondary" @click="showSeguimientoModal = false">
-          Cancelar
+          ❌ Cancelar
         </button>
         <button class="btn primary" @click="guardarSeguimiento">
           💾 Guardar Seguimiento
@@ -572,7 +682,7 @@
 
     </div>
   </div>
-</transition>
+</transition>>
 
   </div>
 </template>
@@ -587,6 +697,8 @@ const API_USER = 'http://localhost:8000/api/user-prospecto'
 
 const prospectos = ref([])
 const loading = ref(false)
+const fileProforma = ref(null)
+const fileAceptacion = ref(null)
 
 const pagination = ref({
   current_page: 1,
@@ -760,7 +872,8 @@ const editSeguimientoProspecto = async (prospectoId) => {
   visita4: p.visita4,
   fechavisita4: formatDate(p.fechavisita4),
   fechaproximacita_visita4: formatDate(p.fechaproximacita_visita4),
-
+  nombre_archivo1: p.nombre_archivo1 ?? null,
+  nombre_archivo2: p.nombre_archivo2 ?? null,
   cantidadvisitas: p.cantidadvisitas ?? 0
 }
 
@@ -906,13 +1019,71 @@ const seguimientoForm = ref({
   visita4: null,
   fechavisita4: null,
   fechaproximacita_visita4: null,
-
+  nombre_archivo1: null,
+  nombre_archivo2: null,
   cantidadvisitas: 0
 })
 
 const formatDate = (dateString) => {
   if (!dateString) return null
   return dateString.substring(0, 10)
+}
+
+const guardarSeguimiento = async () => {
+  try {
+    const formData = new FormData()
+
+    // 👉 campos normales (MENOS los archivos)
+    Object.keys(seguimientoForm.value).forEach(key => {
+      if (
+        seguimientoForm.value[key] !== null &&
+        key !== 'nombre_archivo1' &&
+        key !== 'nombre_archivo2'
+      ) {
+        formData.append(key, seguimientoForm.value[key])
+      }
+    })
+
+    // 👉 archivos reales
+    if (fileProforma.value) {
+      formData.append('nombre_archivo1', fileProforma.value)
+    }
+
+    if (fileAceptacion.value) {
+      formData.append('nombre_archivo2', fileAceptacion.value)
+    }
+
+    // 👉 Laravel PUT con multipart
+    formData.append('_method', 'PUT')
+
+    await axios.post(
+      `http://localhost:8000/api/prospecto/${seguimientoForm.value.prospecto_id}/seguimiento`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    )
+
+    showToast('Seguimiento actualizado correctamente')
+    showSeguimientoModal.value = false
+
+    // limpiar archivos
+    fileProforma.value = null
+    fileAceptacion.value = null
+
+    getProspectos(pagination.value.current_page)
+
+  } catch (e) {
+    console.error(e.response?.data || e)
+    showToast('Error al guardar seguimiento', 'error')
+  }
+}
+
+
+const onFileChange = (e) => {
+  fileProforma.value = e.target.files[0]
+}
+
+const onFileChangeAceptacion = (e) => {
+  fileAceptacion.value = e.target.files[0]
 }
 
 
@@ -1761,5 +1932,325 @@ tbody tr:hover {
 .modal::-webkit-scrollbar-thumb:hover,
 .table-wrapper::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Animación del modal */
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .modal,
+.modal-leave-active .modal {
+  transition: transform 0.3s ease;
+}
+
+.modal-enter-from .modal,
+.modal-leave-to .modal {
+  transform: scale(0.9) translateY(-20px);
+}
+
+/* Backdrop */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Modal principal */
+.modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-large {
+  max-width: 900px;
+}
+
+/* Header */
+.modal-header {
+  padding: 24px;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-header.warning {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.btn-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* Body */
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Secciones */
+.section-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.section-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Formulario */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.required {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #ced4da;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Vista previa de archivo */
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border: 2px solid #28a745;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.file-icon {
+  font-size: 1.2rem;
+}
+
+.file-link {
+  color: #667eea;
+  text-decoration: none;
+  flex: 1;
+  font-weight: 500;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}
+
+/* Upload de archivos */
+.file-upload-wrapper {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
+  border: 2px dashed #ced4da;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #495057;
+  font-weight: 500;
+}
+
+.file-label:hover {
+  border-color: #667eea;
+  background: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.help-text {
+  display: block;
+  margin-top: 6px;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+/* Footer */
+.modal-footer {
+  padding: 20px 24px;
+  border-top: 2px solid #e9ecef;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Botones */
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+}
+
+.btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn.primary:active {
+  transform: translateY(0);
+}
+
+.btn.secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn.secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 10px;
+  }
+
+  .modal {
+    max-height: 95vh;
+  }
+
+  .modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .section-card {
+    padding: 16px;
+  }
 }
 </style>
